@@ -18,12 +18,12 @@ class _TeacherdetadminState extends State<Teacherdetadmin> {
           children: [
              Center(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 50),
+                padding: const EdgeInsets.only(top: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 80, left: 20),
+                      padding: const EdgeInsets.only(right: 50, left: 20),
                       child: IconButton(
                           onPressed: () {
                             Navigator.pop(context);
@@ -32,7 +32,7 @@ class _TeacherdetadminState extends State<Teacherdetadmin> {
                     ),
                     Text(
                       'Teacher Details',
-                      style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500 ),
+                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500 ),
                     ),
                   ],
                 ),
@@ -135,7 +135,7 @@ class _TeacherdetadminState extends State<Teacherdetadmin> {
          child: Text('Corem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.'),
        ),    
            Padding(
-              padding: const EdgeInsets.only(top: 220),
+              padding: const EdgeInsets.only(top: 100),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

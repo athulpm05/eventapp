@@ -20,12 +20,12 @@ class _AddeventadminState extends State<Addeventadmin> {
               children: [
                 Center(
                     child: Padding(
-                  padding: const EdgeInsets.only(top: 50),
+                  padding: const EdgeInsets.only(top: 30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 90, left: 20),
+                        padding: const EdgeInsets.only(right: 60, left: 20),
                         child: IconButton(
                             onPressed: () {
                               Navigator.pop(context);
@@ -35,7 +35,7 @@ class _AddeventadminState extends State<Addeventadmin> {
                       Text(
                         ' Add Event',
                         style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -146,7 +146,7 @@ class _AddeventadminState extends State<Addeventadmin> {
                   ),
                 ),
                  Padding(
-                padding: const EdgeInsets.only(top: 130),
+                padding: const EdgeInsets.only(top: 65),
                 child: Container(
                   height: 50,
                   width: 350,

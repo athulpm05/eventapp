@@ -20,7 +20,7 @@ class _AddEventState extends State<AddEvent> {
             children: [
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 50),
+                padding: const EdgeInsets.only(top: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -146,12 +146,18 @@ class _AddEventState extends State<AddEvent> {
                 ),
               ),
                Padding(
-              padding: const EdgeInsets.only(top: 130),
-              child: Container(
-                height: 50,
-                width: 350,
-                decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
-                child: Center(child: Text('Submit',style: TextStyle(color: Colors.white,fontSize: 15),)),
+              padding: const EdgeInsets.only(top: 65),
+              //inkwell
+              child: InkWell(
+                  onTap: () {
+                    
+                  },
+                child: Container(
+                  height: 50,
+                  width: 350,
+                  decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
+                  child: Center(child: Text('Submit',style: TextStyle(color: Colors.white,fontSize: 15),)),
+                ),
               ),
             )
             ],
