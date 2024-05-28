@@ -15,6 +15,7 @@ class _RegstudentState extends State<Regstudent> {
     return  Scaffold(
        body: SafeArea(
         child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             children: [
               Center(child: Padding(

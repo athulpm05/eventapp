@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623462495481",
+    "project_id": "colleage-3996e",
+    "storage_bucket": "colleage-3996e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623462495481:android:32fc88e3d8e425e536de28",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcRAup0wTiVT5b-27hXrXD1ilCxBEbFRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
