@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/student/profilestd1.dart';
 
 class Profilestd extends StatefulWidget {
-  const Profilestd({super.key});
+    File? image;
 
+   Profilestd({super.key, this.image});
   @override
   State<Profilestd> createState() => _ProfilestdState();
 }
@@ -25,24 +28,29 @@ class _ProfilestdState extends State<Profilestd> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 90,left: 20),
+                      padding: const EdgeInsets.only(right: 100,left: 20),
                       child: IconButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: Icon(Icons.arrow_back_ios)),
                     ),
-                    Text('Profile',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+                    Text('Profile',style: TextStyle(
+                      fontSize: 18,fontWeight: FontWeight.w500),),
                   ],
                 ),
               )),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Image(
-                  height: 100,
-                  width: 100,
-                  image: AssetImage('images/person.png')),
-              ),
+                Row(
+              mainAxisAlignment: MainAxisAlignment
+              .center,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: widget.image != null? FileImage(widget.image!):null,
+                  // child: widget.image == null? Icon(Icons.person,size: 50,):null,
+                  ),
+              ],
+            ),
                Row(
                 children: [
                   Padding(
@@ -137,7 +145,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 55),
                 child: InkWell(
                   onTap: () => Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => Profilestd1(),)),
+                   MaterialPageRoute(builder: (context) => StudentProfile1(),)),
                   child: Container(
                     height: 50,
                     width: 320,

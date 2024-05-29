@@ -26,7 +26,7 @@ class _SigninstudentState extends State<Signinstudent> {
   }
   //snackbar
   final SnackBar _snackBar1 = SnackBar(
-    content: Text("Logon successfull"),
+    content: Text("Login successfull"),
     duration: Duration(seconds: 10),
   );
 
@@ -120,6 +120,8 @@ class _SigninstudentState extends State<Signinstudent> {
                               MaterialPageRoute(
                                 builder: (context) => Event1(),
                               ));
+           ScaffoldMessenger.of(context).showSnackBar(_snackBar1);
+
                         }
                       }
                     }
@@ -147,7 +149,6 @@ class _SigninstudentState extends State<Signinstudent> {
                   Text('Don’t have an account? '),
                   GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(_snackBar1);
                         Navigator.push(
                             context,
                             MaterialPageRoute(

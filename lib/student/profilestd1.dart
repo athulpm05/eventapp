@@ -1,148 +1,237 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class Profilestd1 extends StatefulWidget {
-  const Profilestd1({super.key});
+class StudentProfile1 extends StatefulWidget {
+  const StudentProfile1({super.key, File? image});
 
   @override
-  State<Profilestd1> createState() => _Profilestd1State();
+  State<StudentProfile1> createState() => _StudentProfile1State();
 }
 
-class _Profilestd1State extends State<Profilestd1> {
+class _StudentProfile1State extends State<StudentProfile1> {
+  XFile? pick;
+  File? image;
+  Future<void> ProfileImg()async{
+    if(image!=null){
+      try {
+        final reff = FirebaseStorage.instance
+        .ref()
+        .child('profile')
+        .child(DateTime.now().microsecondsSinceEpoch.toString());
+        await reff.putFile(image!);
+        final imageurl = await reff.getDownloadURL();
+        Navigator.push(context, MaterialPageRoute(builder: (context) => StudentProfile1(image:image),));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: 
+                              Text('error'),
+        ));
+
+      }
+    }
+  }
   @override
+
   Widget build(BuildContext context) {
-    return  Scaffold(
-       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Center(child: Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 90,left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back_ios)),
-                    ),
-                    Text('Profile',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
-                  ],
-                ),
-              )),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Image(
-                  height: 100,
-                  width: 100,
-                  image: AssetImage('images/person.png')),
-              ),
-               Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20,left: 30),
-                    child: Text('Name',style: TextStyle(fontSize: 14),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20,left: 30),
-                    child: Text('Department',style: TextStyle(fontSize: 14),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
-              ),
-                Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20,left: 30),
-                    child: Text('Register No',style: TextStyle(fontSize: 14),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
-              ),
-                Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20,left: 30),
-                    child: Text('Phone No',style: TextStyle(fontSize: 14),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
-              ),
-                Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20,left: 30),
-                    child: Text('Email',style: TextStyle(fontSize: 14),),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
-              ),
-               Padding(
-                padding: const EdgeInsets.only(top: 55),
-                child: Container(
-                  height: 50,
-                  width: 350,
-                  decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
-                  child: Center(child: Text('Submit',style: TextStyle(color: Colors.white,fontSize: 15),)),
-                ),
-              )
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(automaticallyImplyLeading: false,
+        title: Center(child: Text('Profile',
+        style: TextStyle(
+          fontWeight: FontWeight.bold
         ),
+        )),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment
+              .center,
+              children: [
+                // CircleAvatar(
+                //   radius: 50,
+                //   backgroundImage: AssetImage('images/profile.jpg'),),
+                InkWell(
+                  onTap: () async{
+                    ImagePicker Picked = ImagePicker();
+                pick = await Picked.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  image = File(pick!.path);
+                });
+                  },
+                  child:CircleAvatar(
+                    radius: 50,
+                    backgroundImage: image != null? FileImage(image!):null,
+                    child: image == null? Icon(Icons.person,size: 50,):null,
+                    
+                    
+                  )
+                  //
+                  // ClipRRect(
+                  //   borderRadius: BorderRadius.circular(100),
+                  //   child: image == null?
+                  //   Image.asset('images/profile.jpg',width: 100,):Image.file(image!,width: 130,)
+                  // ),
+                )
+              ],
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 20),
+             child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Text('Name'),
+                ),
+              ],
+                       ),
+           ),
+          SizedBox(
+            width: 320,
+            height: 50,
+            child: TextFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 20),
+             child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Text('Department'),
+                ),
+              ],
+                       ),
+           ),
+          SizedBox(
+            width: 320,
+            height: 50,
+            child: TextFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 20),
+             child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Text('Register No'),
+                ),
+              ],
+                       ),
+           ),
+          SizedBox(
+            width: 320,
+            height: 50,
+            child: TextFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 20),
+             child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Text('Phone No'),
+                ),
+              ],
+                       ),
+           ),
+          SizedBox(
+            width: 320,
+            height: 50,
+            child: TextFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 30),
+             child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Text('Email'),
+                ),
+              ],
+                       ),
+           ),
+          SizedBox(
+            width: 320,
+            height: 50,
+            child: TextFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+            ),
+          ),
+           Padding(
+             padding: const EdgeInsets.only(left: 22,top: 40),
+             child: Row(
+               children: [
+                 InkWell(
+                  onTap: () {
+                    ProfileImg();
+                    Navigator.pop(context);
+                  },
+                   child: Container(
+                     width: 320,
+                     height: 50,
+                     decoration: BoxDecoration(
+                       color: Color(0xFF3063A5),
+                       borderRadius: BorderRadius.circular(10)
+                     ),
+                     child: Center(child: Text('Submit',style: TextStyle(color: Colors.white),)),
+                   ),
+                 ),
+               ],
+             ),
+           )
+
+        ],
       ),
     );
   }
