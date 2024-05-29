@@ -1,17 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/student/profilestd1.dart';
 
-class Profilestd extends StatefulWidget {
-  const Profilestd({super.key});
+class Profilestd1 extends StatefulWidget {
+  const Profilestd1({super.key});
 
   @override
-  State<Profilestd> createState() => _ProfilestdState();
+  State<Profilestd1> createState() => _Profilestd1State();
 }
 
-class _ProfilestdState extends State<Profilestd> {
-
+class _Profilestd1State extends State<Profilestd1> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -55,7 +53,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: 40,
-                  width: 320,
+                  width: 350,
                   child: TextFormField(
                     decoration: InputDecoration(border: OutlineInputBorder()),
                   ),
@@ -73,7 +71,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: 40,
-                  width: 320,
+                  width: 350,
                   child: TextFormField(
                     decoration: InputDecoration(border: OutlineInputBorder()),
                   ),
@@ -91,7 +89,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: 40,
-                  width: 320,
+                  width: 350,
                   child: TextFormField(
                     decoration: InputDecoration(border: OutlineInputBorder()),
                   ),
@@ -109,7 +107,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: 40,
-                  width: 320,
+                  width: 350,
                   child: TextFormField(
                     decoration: InputDecoration(border: OutlineInputBorder()),
                   ),
@@ -127,7 +125,7 @@ class _ProfilestdState extends State<Profilestd> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   height: 40,
-                  width: 320,
+                  width: 350,
                   child: TextFormField(
                     decoration: InputDecoration(border: OutlineInputBorder()),
                   ),
@@ -135,15 +133,11 @@ class _ProfilestdState extends State<Profilestd> {
               ),
                Padding(
                 padding: const EdgeInsets.only(top: 55),
-                child: InkWell(
-                  onTap: () => Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => Profilestd1(),)),
-                  child: Container(
-                    height: 50,
-                    width: 320,
-                    decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
-                    child: Center(child: Text('Edit',style: TextStyle(color: Colors.white,fontSize: 15),)),
-                  ),
+                child: Container(
+                  height: 50,
+                  width: 350,
+                  decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
+                  child: Center(child: Text('Submit',style: TextStyle(color: Colors.white,fontSize: 15),)),
                 ),
               )
             ],

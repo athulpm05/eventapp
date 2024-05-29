@@ -23,11 +23,7 @@ class _RegstudentState extends State<Regstudent> {
   TextEditingController password = TextEditingController();
   final valid = GlobalKey<FormState>();
 
-  // Future<void> checking()async{
-  //   if (valid.currentstate!.validate()){
-
-  //   }
-  // }
+ 
 
   //snackbar
   final SnackBar _snackBar = SnackBar(
@@ -47,7 +43,7 @@ class _RegstudentState extends State<Regstudent> {
               children: [
                 Center(
                     child: Padding(
-                  padding: const EdgeInsets.only(top: 35),
+                  padding: const EdgeInsets.only(top: 20),
                   child: Row(
                     children: [
                       IconButton(
@@ -71,7 +67,7 @@ class _RegstudentState extends State<Regstudent> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 40, left: 30),
+                          padding: const EdgeInsets.only(top: 10, left: 30),
                           child: Text(
                             'Name',
                             style: TextStyle(fontSize: 15),
@@ -84,7 +80,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       controller: name,
                       decoration: InputDecoration(border: OutlineInputBorder()),
@@ -100,7 +96,7 @@ class _RegstudentState extends State<Regstudent> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30),
+                      padding: const EdgeInsets.only(top: 10, left: 30),
                       child: Text(
                         'Department',
                         style: TextStyle(fontSize: 15),
@@ -111,7 +107,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       controller: department,
@@ -127,7 +123,7 @@ class _RegstudentState extends State<Regstudent> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30),
+                      padding: const EdgeInsets.only(top: 10, left: 30),
                       child: Text(
                         'Reg no',
                         style: TextStyle(fontSize: 15),
@@ -138,7 +134,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       controller: reg_no,
@@ -154,7 +150,7 @@ class _RegstudentState extends State<Regstudent> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30),
+                      padding: const EdgeInsets.only(top: 10, left: 30),
                       child: Text(
                         'Phone No',
                         style: TextStyle(fontSize: 15),
@@ -165,7 +161,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       controller: phone,
@@ -181,7 +177,7 @@ class _RegstudentState extends State<Regstudent> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30),
+                      padding: const EdgeInsets.only(top: 10, left: 30),
                       child: Text(
                         'Email',
                         style: TextStyle(fontSize: 15),
@@ -192,7 +188,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       controller: email,
@@ -208,7 +204,7 @@ class _RegstudentState extends State<Regstudent> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30),
+                      padding: const EdgeInsets.only(top: 10, left: 30),
                       child: Text(
                         'Password',
                         style: TextStyle(fontSize: 15),
@@ -219,7 +215,7 @@ class _RegstudentState extends State<Regstudent> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: SizedBox(
-                    width: 350,
+                    width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       controller: password, 
@@ -235,6 +231,8 @@ class _RegstudentState extends State<Regstudent> {
                     ),
                   ),
                 ),
+                //on tap
+
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: InkWell(
@@ -266,7 +264,7 @@ class _RegstudentState extends State<Regstudent> {
                     },
                     child: Container(
                       height: 50,
-                      width: 350,
+                      width: 320,
                       decoration: BoxDecoration(
                           color: Color(0xFF3063A5),
                           borderRadius: BorderRadius.circular(7)),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/student/Event.dart';
 import 'package:flutter_application_1/student/regstudent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Signinstudent extends StatefulWidget {
@@ -23,7 +22,14 @@ class _SigninstudentState extends State<Signinstudent> {
   Future<void> studentdata(String data) async {
     SharedPreferences std = await SharedPreferences.getInstance();
     await std.setString('studentId', data);
+
   }
+  //snackbar
+  final SnackBar _snackBar1 = SnackBar(
+    content: Text("Logon successfull"),
+    duration: Duration(seconds: 10),
+  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +147,7 @@ class _SigninstudentState extends State<Signinstudent> {
                   Text('Don’t have an account? '),
                   GestureDetector(
                       onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(_snackBar1);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
