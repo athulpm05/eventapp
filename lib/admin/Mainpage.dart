@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> {
                   },
                   child: Container(
                     height: 50,
-                    width: 350,
+                    width: 300,
                     decoration: BoxDecoration(
                         color: Color(0xFF3063A5),
                         borderRadius: BorderRadius.circular(7)),
@@ -58,7 +58,7 @@ class _MainPageState extends State<MainPage> {
                   },
                   child: Container(
                     height: 50,
-                    width: 350,
+                    width: 300,
                     decoration: BoxDecoration(
                         color: Color(0xFF3063A5),
                         borderRadius: BorderRadius.circular(7)),
@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
                   },
                   child: Container(
                     height: 50,
-                    width: 350,
+                    width: 300,
                     decoration: BoxDecoration(
                         color: Color(0xFF3063A5),
                         borderRadius: BorderRadius.circular(7)),
