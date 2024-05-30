@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_1/student/signin1.dart';
+import 'package:flutter_application_1/student/loginpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Regstudent extends StatefulWidget {
   const Regstudent({super.key});
@@ -22,8 +23,6 @@ class _RegstudentState extends State<Regstudent> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   final valid = GlobalKey<FormState>();
-
- 
 
   //snackbar
   final SnackBar _snackBar = SnackBar(
@@ -218,7 +217,7 @@ class _RegstudentState extends State<Regstudent> {
                     width: 320,
                     child: TextFormField(
                       decoration: InputDecoration(border: OutlineInputBorder()),
-                      controller: password, 
+                      controller: password,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
                           return 'please enter password';
@@ -242,12 +241,14 @@ class _RegstudentState extends State<Regstudent> {
                       if (valid.currentState?.validate() ?? false) {
                         UserCredential userCredential = await FirebaseAuth
                             .instance
-                            .createUserWithEmailAndPassword(
-                                email: email.text, password: password.text);
+                            .createUserWithEmailAndPassword(email: email.text, password: password.text);
+                            
                         String uid = userCredential.user!.uid;
-                        await FirebaseFirestore.instance
+                        if(userCredential.user!=null){
+                          await FirebaseFirestore.instance
                             .collection('student data')
-                            .add({
+                            .doc(uid)
+                            .set({
                           'Name': name.text,
                           'Depatment': department.text,
                           'Register': reg_no.text,
@@ -255,6 +256,16 @@ class _RegstudentState extends State<Regstudent> {
                           'Email': email.text,
                           'Password': password.text
                         });
+                        SharedPreferences spreff=await SharedPreferences.getInstance();
+                        await spreff.setString('uid', uid);
+                        await spreff.setString('name', name.text);
+                        await spreff.setString('department', department.text);
+                        await spreff.setString('register', reg_no.text);
+                        await spreff.setString('phone', phone.text);
+                        await spreff.setString('email', email.text);
+                        await spreff.setString('password', password.text);
+                        }
+                        
                         Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/admin/login.dart';
-import 'package:flutter_application_1/student/signin1.dart';
+import 'package:flutter_application_1/student/loginpage.dart';
 import 'package:flutter_application_1/teacher/signin.dart';
 
 class MainPage extends StatefulWidget {
