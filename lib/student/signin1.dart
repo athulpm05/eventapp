@@ -27,7 +27,7 @@ class _SigninstudentState extends State<Signinstudent> {
   //snackbar
   final SnackBar _snackBar1 = SnackBar(
     content: Text("Login successfull"),
-    duration: Duration(seconds: 10),
+    duration: Duration(seconds: 4),
   );
 
 

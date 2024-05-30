@@ -28,7 +28,7 @@ class _ProfilestdState extends State<Profilestd> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 100,left: 20),
+                      padding: const EdgeInsets.only(right: 92,left: 10),
                       child: IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -36,7 +36,7 @@ class _ProfilestdState extends State<Profilestd> {
                         icon: Icon(Icons.arrow_back_ios)),
                     ),
                     Text('Profile',style: TextStyle(
-                      fontSize: 18,fontWeight: FontWeight.w500),),
+                      fontSize: 18,fontWeight: FontWeight.w700),),
                   ],
                 ),
               )),
