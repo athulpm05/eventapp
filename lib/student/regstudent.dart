@@ -254,22 +254,18 @@ class _RegstudentState extends State<Regstudent> {
                           'Register': reg_no.text,
                           'Phone': phone.text,
                           'Email': email.text,
-                          'Password': password.text
+                          'Password': password.text,
+                          "uid" : uid
+
+
                         });
-                        SharedPreferences spreff=await SharedPreferences.getInstance();
-                        await spreff.setString('uid', uid);
-                        await spreff.setString('name', name.text);
-                        await spreff.setString('department', department.text);
-                        await spreff.setString('register', reg_no.text);
-                        await spreff.setString('phone', phone.text);
-                        await spreff.setString('email', email.text);
-                        await spreff.setString('password', password.text);
+
                         }
                         
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Signinstudent(),
+                              builder: (context) => StudentSignIn(),
                             ));
                       }
                     },

@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Signinstudent(),
+                          builder: (context) => StudentSignIn(),
                         ));
                   },
                   child: Container(

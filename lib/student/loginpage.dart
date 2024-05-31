@@ -1,170 +1,187 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, use_build_context_synchronously
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/student/Event.dart';
 import 'package:flutter_application_1/student/regstudent.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Signinstudent extends StatefulWidget {
-  const Signinstudent({super.key});
+class StudentSignIn extends StatefulWidget {
+  const StudentSignIn({Key? key});
 
   @override
-  State<Signinstudent> createState() => _SigninstudentState();
+  State<StudentSignIn> createState() => _StudentSignInState();
 }
 
-class _SigninstudentState extends State<Signinstudent> {
-  //
-  final valid = GlobalKey<FormState>();
-  var email = TextEditingController();
-  var password = TextEditingController();
+class _StudentSignInState extends State<StudentSignIn> {
+  final username = TextEditingController();
+  final password = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-  Future<void> studentdata(String data) async {
-    SharedPreferences std = await SharedPreferences.getInstance();
-    await std.setString('studentId', data);
-
-  }
-  //snackbar
-  final SnackBar _snackBar1 = SnackBar(
-    content: Text("Login successfull"),
-    duration: Duration(seconds: 4),
-  );
-
+  bool obscurePassword = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Form(
-        key: valid,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 25),
-              child: Text(
-                'Sign in',
-                style: TextStyle(fontSize: 33, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 25),
-              child: Text(
-                'Sign into your account',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(hintText: 'Email Address'),
-                    //
-                    controller: email,
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'please enter email';
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(hintText: 'Password'),
-                    controller: password,
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'please enter password';
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: Center(
-                child: InkWell(
-                  onTap: () async {
-                    //email adding in firebase
-                    if (valid.currentState?.validate() ?? false) {
-                      String email1 = email.text.trim();
-                      String password1 = password.text.trim();
-                      var querysnap = await FirebaseFirestore.instance
-                          .collection('student data')
-                          .where('Email', isEqualTo: email1)
-                          .limit(1)
-                          .get();
-
-                      //password adding in firebase
-                      if (querysnap.docs.isNotEmpty) {
-                        var studdata = querysnap.docs.first.data();
-                        if (studdata['Password'] == password1) {
-                          var studentid = studdata['studentid'] as String?;
-                          if (studentid != null) {
-                            await studentdata(studentid);
-                          }
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Event1(),
-                              ));
-           ScaffoldMessenger.of(context).showSnackBar(_snackBar1);
-
-                        }
-                      }
-                    }
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 350,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF3063A5),
-                        borderRadius: BorderRadius.circular(7)),
-                    child: Center(
-                        child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    )),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Don’t have an account? '),
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+                  Text(
+                    "Sign in",
+                    style: TextStyle(fontSize: 33, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "Sign into your account",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  TextFormField(
+                    controller: username,
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(value)) {
+                        return 'Enter a valid email!';
+                      }
+                    },
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                        hintText: "Email Address",
+                        focusedBorder: UnderlineInputBorder()),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: password,
+                    obscureText: obscurePassword,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      focusedBorder: UnderlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () {
+                            validateLogin();
+                          },
+                          child: Text('Login'),
+                        ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don’t have an account?",
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => Regstudent(),
-                            ));
-                      },
-                      child: Text(
-                        'Sign up',
-                        style: TextStyle(color: Colors.blue),
-                      ))
+                            ),
+                          );
+                        },
+                        child: Text(
+                          " Sign up",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      )),
+          ),
+        ],
+      ),
     );
   }
+void validateLogin() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  final String enteredEmail = username.text.trim();
+  final String enteredPassword = password.text.trim();
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('student data')
+        .where('Email', isEqualTo: enteredEmail)
+        .where('Password', isEqualTo: enteredPassword)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      String docId = querySnapshot.docs.first.id;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('studentId', docId);
+
+      // Print the stored studentId to the console
+      String? storedStudentId = prefs.getString('studentId');
+      print('Stored studentId: $storedStudentId');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Event1()),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Invalid Credentials'),
+            content: Text('Please enter valid email and password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
 }
