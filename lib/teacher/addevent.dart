@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent({super.key});
@@ -10,156 +11,270 @@ class AddEvent extends StatefulWidget {
 }
 
 class _AddEventState extends State<AddEvent> {
+  var size, width, height;
+
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  final TextEditingController eventNameController = TextEditingController();
+  var  dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+  Future<void> teacherAddingEvent() async {
+    await FirebaseFirestore.instance.collection("TeacherAddingEvent").add({
+      "EventName": eventNameController.text,
+      "Date": selectDate,
+      "Time": timeController.text,
+      "Location": locationController.text,
+      "Description": descriptionController.text,
+    });
+  }
+
+  DateTime? selectDate;
+  var date;
+
+  Future<void> pickDate() async {
+    date = await showDatePicker(
+      context: context,
+      firstDate: DateTime(1999, 1, 1),
+      lastDate: DateTime(2100, 1, 1),
+    );
+    setState(() {
+      selectDate = date;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Event",
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+            )),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: formkey,
           child: Column(
             children: [
-              Center(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 110, left: 20),
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back_ios)),
-                    ),
-                    Text(
-                      'Event',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              )),
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 30),
-                    child: Text(
-                      'Event Name',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
+                    padding: const EdgeInsets.only(left: 25, top: 40),
+                    child: Text("Event Name",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        )),
+                  )
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 45,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
               ),
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 30),
-                    child: Text(
-                      'Date',
-                      style: TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.only(left: 20, top: 6),
+                    child: SizedBox(
+                      height: height / 18,
+                      width: width / 1.1,
+                      child: TextFormField(
+                        controller: eventNameController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Event Name is Empty";
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                   ),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 45,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
               ),
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 30),
-                    child: Text(
-                      'Time',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
+                    padding: const EdgeInsets.only(left: 25, top: 20),
+                    child: Text("Date",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        )),
+                  )
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 45,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
               ),
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 30),
-                    child: Text(
-                      'Location',
-                      style: TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.only(left: 20, top: 6),
+                    child: SizedBox(
+                      height: height / 18,
+                      width: width / 1.1,
+                      child: TextFormField(
+                        controller: dateController,
+                        decoration: InputDecoration(
+                          hintText: selectDate!=null ? DateFormat("dd-MM-yyyy").format(date) : "date" ,
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  pickDate();
+                                },
+                                icon: Icon(Icons.date_range_outlined)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Date is Empty";
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                   ),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: 45,
-                  width: 350,
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder()),
-                  ),
-                ),
               ),
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 30),
-                    child: Text(
-                      'Description',
-                      style: TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.only(left: 25, top: 20),
+                    child: Text("Time",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        )),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 6),
+                    child: SizedBox(
+                      height: height / 18,
+                      width: width / 1.1,
+                      child: TextFormField(
+                        controller: timeController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Time is Empty";
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Container(
-                  height: 134,
-                  width: 350,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(width: 0.7)),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, top: 20),
+                    child: Text("Location",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        )),
+                  )
+                ],
               ),
-               Padding(
-              padding: const EdgeInsets.only(top: 65),
-              //inkwell
-              child: InkWell(
-                  onTap: () {
-                    
-                  },
-                child: Container(
-                  height: 50,
-                  width: 350,
-                  decoration: BoxDecoration(color: Color(0xFF3063A5),borderRadius: BorderRadius.circular(7)),
-                  child: Center(child: Text('Submit',style: TextStyle(color: Colors.white,fontSize: 15),)),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 6),
+                    child: SizedBox(
+                      height: height / 18,
+                      width: width / 1.1,
+                      child: TextFormField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Location is Empty";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, top: 20),
+                    child: Text("Description",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 14),
+                        )),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 6),
+                    child: SizedBox(
+                      // height: height / 18,
+                      width: width / 1.1,
+                      child: TextFormField(
+                        controller: descriptionController,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        )),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Description is Empty";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 60,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (formkey.currentState!.validate()) {
+                        teacherAddingEvent();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Container(
+                      height: height / 16,
+                      width: width / 1.1,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Color(0xffb4472B2)),
+                      child: Center(
+                        child: Text("Submit",
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontWeight: FontWeight.w400, fontSize: 14),
+                                color: Colors.white)),
+                      ),
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),

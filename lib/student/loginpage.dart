@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, use_key_in_widget_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/student/Event.dart';
@@ -18,6 +20,64 @@ class _StudentSignInState extends State<StudentSignIn> {
 
   bool obscurePassword = true;
   bool isLoading = false;
+
+  void validateLogin() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  final String enteredEmail = username.text.trim();
+  final String enteredPassword = password.text.trim();
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('student data')
+        .where('Email', isEqualTo: enteredEmail)
+        .where('Password', isEqualTo: enteredPassword)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      String docId = querySnapshot.docs.first.id;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('studentId', docId);
+
+      // Print the stored studentId to the console
+      String? storedStudentId = prefs.getString('studentId');
+      print('Stored studentId: $storedStudentId');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Event1()),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Invalid Credentials'),
+            content: Text('Please enter valid email and password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +146,18 @@ class _StudentSignInState extends State<StudentSignIn> {
                     height: 50,
                   ),
                   isLoading
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () {
-                            validateLogin();
-                          },
-                          child: Text('Login'),
-                        ),
+                      ? Center(child: CircularProgressIndicator())
+                      : Center(
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.teal,
+                          
+                            onPressed: () {
+                              validateLogin();
+                            },
+                            child: Text('Login',style: 
+                            TextStyle(color: Colors.black),),
+                          ),
+                      ),
                   SizedBox(
                     height: 20,
                   ),
@@ -127,61 +192,5 @@ class _StudentSignInState extends State<StudentSignIn> {
       ),
     );
   }
-void validateLogin() async {
-  setState(() {
-    isLoading = true;
-  });
 
-  final String enteredEmail = username.text.trim();
-  final String enteredPassword = password.text.trim();
-
-  try {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('student data')
-        .where('Email', isEqualTo: enteredEmail)
-        .where('Password', isEqualTo: enteredPassword)
-        .limit(1)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      String docId = querySnapshot.docs.first.id;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('studentId', docId);
-
-      // Print the stored studentId to the console
-      String? storedStudentId = prefs.getString('studentId');
-      print('Stored studentId: $storedStudentId');
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Event1()),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Invalid Credentials'),
-            content: Text('Please enter valid email and password.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    setState(() {
-      isLoading = false;
-    });
-  }
-}
 }

@@ -51,6 +51,7 @@ class _ProfilestdState extends State<Profilestd> {
             phone.text = studentSnapshot['Phone'] ?? '';
             email.text = studentSnapshot['Email'] ?? '';
           });
+          
         }
       }
     } catch (e) {
@@ -92,7 +93,7 @@ class _ProfilestdState extends State<Profilestd> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => StudentProfile1()),
+                                MaterialPageRoute(builder: (context) => Studentprofile1()),
                               );
                             },
                             icon: Icon(Icons.edit_document),
@@ -120,10 +121,12 @@ class _ProfilestdState extends State<Profilestd> {
             ),
           ),
         ),
+        
       ),
+      
     );
   }
-
+  
   Widget _buildProfileField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(top: 20),

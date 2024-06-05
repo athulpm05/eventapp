@@ -16,6 +16,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.teal[200],
       body: SafeArea(
         child: Align(
           alignment: Alignment.center,
