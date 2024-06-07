@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/student/profilestd1.dart';
+import 'package:flutter_application_1/student/updateprofile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,20 +25,18 @@ class Studentprofile1 extends StatefulWidget {
 class _Studentprofile1State extends State<Studentprofile1> {
   XFile? pick;
   File? image;
+  String? imgurl;
   Future<void> ProfileImg() async {
     if (image != null) {
       try {
         final reff = FirebaseStorage.instance
             .ref()
             .child('profile')
-            .child(DateTime.now().microsecondsSinceEpoch.toString());
+            .child(DateTime.now().millisecondsSinceEpoch.toString());
         await reff.putFile(image!);
-        final imageurl = await reff.getDownloadURL();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Studentprofile1(image: image),
-            ));
+        var imageurl = await reff.getDownloadURL();
+       setState(() {
+         imgurl=imageurl;       });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('error'),
@@ -69,17 +67,18 @@ class _Studentprofile1State extends State<Studentprofile1> {
 
       if (std != null && std.isNotEmpty) {
         DocumentSnapshot studentSnapshot = await FirebaseFirestore.instance
-            .collection('student data')
+            .collection('student_reg')
             .doc(std)
             .get();
 
         if (studentSnapshot.exists) {
           setState(() {
-            name.text = studentSnapshot['Name'] ?? '';
-            department.text = studentSnapshot['Depatment'] ?? '';
-            register_no.text = studentSnapshot['Register'] ?? '';
-            phone.text = studentSnapshot['Phone'] ?? '';
-            email.text = studentSnapshot['Email'] ?? '';
+            name.text = studentSnapshot['name'] ?? '';
+            department.text = studentSnapshot['department'] ?? '';
+            register_no.text = studentSnapshot['reg_no'] ?? '';
+            phone.text = studentSnapshot['phone'] ?? '';
+            email.text = studentSnapshot['email'] ?? '';
+            imgurl=studentSnapshot['imgurl'] ?? '';
           });
           
         }
@@ -105,7 +104,7 @@ class _Studentprofile1State extends State<Studentprofile1> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 92, left: 10),
+                          padding: const EdgeInsets.only(right: 60, left: 10),
                           child: IconButton(
                             onPressed: () {
                               Navigator.pop(context);
@@ -114,7 +113,7 @@ class _Studentprofile1State extends State<Studentprofile1> {
                           ),
                         ),
                         Text(
-                          'Profile',
+                          ' Update Profile',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                        
@@ -138,9 +137,9 @@ class _Studentprofile1State extends State<Studentprofile1> {
                     //circle image adding potion
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: image!=null?FileImage(image!):null,
-                      child: image==null?
-                      Icon(Icons.person,size: 50,):null)
+                      backgroundImage:image!=null?FileImage(image!) as ImageProvider<Object>:(imgurl!=null&&imgurl!.isNotEmpty)?NetworkImage(imgurl!):null,
+                      child:image==null&&(imgurl==null||imgurl!.isEmpty)?Icon(Icons.person,size: 50,):null
+                     )
                     ),
 
 
@@ -163,33 +162,34 @@ class _Studentprofile1State extends State<Studentprofile1> {
                     register_no.text.isNotEmpty&&
                     phone.text.isNotEmpty&&
                     email.text.isNotEmpty)
+                    ProfileImg();
                     try{
                     SharedPreferences preff=await SharedPreferences.getInstance();
-                    String?std=preff.getString('studentID');
-                    if(std!=null){
+                    String?std=preff.getString('studentId');
+                    if(std!.isNotEmpty){
 
                       await FirebaseFirestore.instance
-                      .collection('student data')
+                      .collection('student_reg')
                       .doc(std)
                       .update({
-                        "Name":name.text,
-                        "Depatment":department.text,
-                        "Register":register_no.text,
-                        "Phone":phone.text,
-                        "Email":email.text
+                        "name":name.text,
+                        "department":department.text,
+                        "reg_no":register_no.text,
+                        "phone":phone.text,
+                        "email":email.text,
+                        'imgurl':imgurl
                         
                       });
                       ScaffoldMessenger.of(context).
                       showSnackBar(SnackBar(content: Text("Profile successfully updated")));
+                       
                     }
 
                     }catch(e){
                       print("$e");
                     }
-                    
                     Navigator.pop(context);
 
-                    
                   },
                   child: Container(
                     width: 320,

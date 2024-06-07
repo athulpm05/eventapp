@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 
 class Eventaddstd extends StatefulWidget {
@@ -70,7 +69,7 @@ class _EventaddstdState extends State<Eventaddstd> {
                       height: 45,
                       width: 350,
                       child: TextFormField(
-                        //++
+                        //
                         controller: requestevent,
                         validator: (value) {
                         if (value?.isEmpty ?? true) {
@@ -205,15 +204,23 @@ class _EventaddstdState extends State<Eventaddstd> {
                     onTap: () async {
                       
                           await FirebaseFirestore.instance
-                            .collection('student data')
+                            .collection('stud_addevent')
                             .doc()
                             .set({
-                          'Requestevent': requestevent.text,
-                          'Name': name.text,
-                          'Department':department .text,
-                          'Phone': phone.text,
-                          'Description': description.text,
+                          'requestevent': requestevent.text,
+                          'name': name.text,
+                          'department':department .text,
+                          'phone': phone.text,
+                          'description': description.text,
                         });
+                        requestevent.clear();
+                        name.clear();
+                        department.clear();
+                        phone.clear();
+                        description.clear();
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('event requested')));
+
                     },
                     child: Container(
                       height: 50,

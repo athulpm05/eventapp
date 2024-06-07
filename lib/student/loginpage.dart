@@ -14,70 +14,74 @@ class StudentSignIn extends StatefulWidget {
 }
 
 class _StudentSignInState extends State<StudentSignIn> {
-  final username = TextEditingController();
-  final password = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   bool obscurePassword = true;
   bool isLoading = false;
 
-  void validateLogin() async {
-  setState(() {
-    isLoading = true;
-  });
-
-  final String enteredEmail = username.text.trim();
-  final String enteredPassword = password.text.trim();
-
-  try {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('student data')
-        .where('Email', isEqualTo: enteredEmail)
-        .where('Password', isEqualTo: enteredPassword)
-        .limit(1)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      String docId = querySnapshot.docs.first.id;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('studentId', docId);
-
-      // Print the stored studentId to the console
-      String? storedStudentId = prefs.getString('studentId');
-      print('Stored studentId: $storedStudentId');
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Event1()),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Invalid Credentials'),
-            content: Text('Please enter valid email and password.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+  Future<void> validateLogin() async {
+    if (!formKey.currentState!.validate()) {
+      return;
     }
-  } catch (e) {
-    print('Error: $e');
-  } finally {
+
     setState(() {
-      isLoading = false;
+      isLoading = true;
     });
+
+    final String enteredEmail = usernameController.text.trim();
+    final String enteredPassword = passwordController.text.trim();
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('student_reg')
+          .where('email', isEqualTo: enteredEmail)
+          .where('pass', isEqualTo: enteredPassword)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String docId = querySnapshot.docs.first.id;
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('studentId', docId);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Event1()),
+        );
+      } else {
+        showErrorDialog('Invalid Credentials', 'Please enter a valid email and password.');
+      }
+    } catch (e) {
+      showErrorDialog('Error', 'An error occurred while trying to log in. Please try again.');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-}
+
+  void showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,24 +108,26 @@ class _StudentSignInState extends State<StudentSignIn> {
                     height: 40,
                   ),
                   TextFormField(
-                    controller: username,
+                    controller: usernameController,
                     validator: (value) {
                       if (value!.isEmpty ||
                           !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                               .hasMatch(value)) {
                         return 'Enter a valid email!';
                       }
+                      return null;
                     },
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
-                        hintText: "Email Address",
-                        focusedBorder: UnderlineInputBorder()),
+                      hintText: "Email Address",
+                      focusedBorder: UnderlineInputBorder(),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextFormField(
-                    controller: password,
+                    controller: passwordController,
                     obscureText: obscurePassword,
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
@@ -129,9 +135,7 @@ class _StudentSignInState extends State<StudentSignIn> {
                       focusedBorder: UnderlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          obscurePassword ? Icons.visibility : Icons.visibility_off,
                           color: Colors.black,
                         ),
                         onPressed: () {
@@ -148,16 +152,16 @@ class _StudentSignInState extends State<StudentSignIn> {
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : Center(
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.teal,
-                          
-                            onPressed: () {
-                              validateLogin();
-                            },
-                            child: Text('Login',style: 
-                            TextStyle(color: Colors.black),),
+                        
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.teal,
+                            onPressed: validateLogin,
+                            child: Text(
+                              'Login',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
-                      ),
+                        ),
                   SizedBox(
                     height: 20,
                   ),
@@ -170,11 +174,9 @@ class _StudentSignInState extends State<StudentSignIn> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => Regstudent(),
-                            ),
+                            MaterialPageRoute(builder: (context) => Regstudent()),
                           );
                         },
                         child: Text(
@@ -192,5 +194,4 @@ class _StudentSignInState extends State<StudentSignIn> {
       ),
     );
   }
-
 }

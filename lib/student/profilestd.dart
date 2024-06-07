@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/student/profilestd1.dart';
+import 'package:flutter_application_1/student/updateprofile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,7 +11,7 @@ class Profilestd extends StatefulWidget {
   File? image;
 
   Profilestd({super.key, this.image});
-  
+
   @override
   State<Profilestd> createState() => _ProfilestdState();
 }
@@ -25,12 +25,14 @@ class _ProfilestdState extends State<Profilestd> {
 
   final validkey = GlobalKey<FormState>();
 
+
   @override
   void initState() {
     super.initState();
     fetchstudentDetails();
   }
-
+  //image adding
+String? imageurl;
   Future<void> fetchstudentDetails() async {
     try {
       SharedPreferences spreff = await SharedPreferences.getInstance();
@@ -38,21 +40,25 @@ class _ProfilestdState extends State<Profilestd> {
       print("SharedPreferences student ID: $std");
 
       if (std != null && std.isNotEmpty) {
-        DocumentSnapshot studentSnapshot = await FirebaseFirestore.instance
-            .collection('student data')
+        Stream<DocumentSnapshot> studentSnapshot = await FirebaseFirestore
+            .instance
+            .collection('student_reg')
             .doc(std)
-            .get();
+            .snapshots();
 
-        if (studentSnapshot.exists) {
-          setState(() {
-            name.text = studentSnapshot['Name'] ?? '';
-            department.text = studentSnapshot['Depatment'] ?? '';
-            register_no.text = studentSnapshot['Register'] ?? '';
-            phone.text = studentSnapshot['Phone'] ?? '';
-            email.text = studentSnapshot['Email'] ?? '';
-          });
-          
-        }
+        studentSnapshot.listen((event) {
+          if (event.exists) {
+            setState(() {
+              name.text = event['name'] ?? '';
+              department.text = event['department'] ?? '';
+              register_no.text = event['reg_no'] ?? '';
+              phone.text = event['phone'] ?? '';
+              email.text = event['email'] ?? '';
+              imageurl=event['imgurl'] ?? '';
+
+            });
+          }
+        });
       }
     } catch (e) {
       print('Error: $e');
@@ -85,7 +91,8 @@ class _ProfilestdState extends State<Profilestd> {
                         ),
                         Text(
                           'Profile',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 80),
@@ -93,7 +100,8 @@ class _ProfilestdState extends State<Profilestd> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Studentprofile1()),
+                                MaterialPageRoute(
+                                    builder: (context) => Studentprofile1()),
                               );
                             },
                             icon: Icon(Icons.edit_document),
@@ -108,7 +116,8 @@ class _ProfilestdState extends State<Profilestd> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: widget.image != null ? FileImage(widget.image!) : null,
+                      backgroundImage: imageurl!=null&& imageurl!.isNotEmpty?NetworkImage(imageurl!):null,
+                      child: imageurl==null||imageurl!.isEmpty?Icon(Icons.person,size: 50,):null,
                     ),
                   ],
                 ),
@@ -121,12 +130,10 @@ class _ProfilestdState extends State<Profilestd> {
             ),
           ),
         ),
-        
       ),
-      
     );
   }
-  
+
   Widget _buildProfileField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
